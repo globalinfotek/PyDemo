@@ -22,7 +22,7 @@ pipeline {
             steps{
                  git {
             			remote {
-                			github('krishnachaganti/PyDemo')
+                			github('globalinfotek/PyDemo')
                 			refspec('+refs/pull/*:refs/remotes/origin/pr/*')
             			}
             			branch('master')
