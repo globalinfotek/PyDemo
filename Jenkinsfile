@@ -39,24 +39,8 @@ pipeline {
                
                 echo "Test and test coverage"
                 sh  ''' source ./env/bin/activate
-                		    pytest  -vs TestShoppingCart.py 
                         pytest --cov=ShoppingCart  TestShoppingCart.py
                     '''
-            }
-            post{
-                always{
-                    step([$class: 'CoberturaPublisher',
-                                   autoUpdateHealth: false,
-                                   autoUpdateStability: false,
-                                   coberturaReportFile: 'reports/coverage.xml',
-                                   failNoReports: false,
-                                   failUnhealthy: false,
-                                   failUnstable: false,
-                                   maxNumberOfBuilds: 10,
-                                   onlyStable: false,
-                                   sourceEncoding: 'ASCII',
-                                   zoomCoverageChart: false])
-                }
             }
         }
 
@@ -67,27 +51,6 @@ pipeline {
                 sh  ''' source ./env/bin/activate
                 		    pytest  -vs TestShoppingCart.py 
                     '''
-            }
-        }
-
-    
-
-        stage('Build package') {
-            when {
-                expression {
-                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
-                }
-            }
-            steps {
-                sh  ''' source activate ${BUILD_TAG}
-                        python setup.py bdist_wheel
-                    '''
-            }
-            post {
-                always {
-                    // Archive unit tests for the future
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true
-                }
             }
         }
     }
