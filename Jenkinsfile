@@ -40,7 +40,7 @@ pipeline {
                 echo "Test and test coverage"
                 sh  ''' source ./env/bin/activate
                         pytest --cov=ShoppingCart  TestShoppingCart.py
-                        pytest --junitxml=reports/test_results.xml TestShoppingCart.py
+                        pytest --junitxml=reports/results/test_results.xml TestShoppingCart.py
                     '''
             }
         }
