@@ -38,7 +38,7 @@ pipeline {
                 echo "Raw metrics"
                
                 echo "Test and test coverage"
-                sh  ''' pytest  -vs TestShoppingCart.py 
+                sh  ''' source ./env/bin/activate
                         pytest --cov=ShoppingCart  TestShoppingCart.py
                     '''
             }
@@ -63,34 +63,19 @@ pipeline {
 
         stage('Unit tests') {
             steps {
-                sh  ''' source activate ${BUILD_TAG}
-                        python -m pytest --verbose --junit-xml reports/unit_tests.xml
+                sh  ''' source ./env/bin/activate
+                		    pytest  -vs TestShoppingCart.py 
                     '''
             }
             post {
                 always {
                     // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+                    //junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
                 }
             }
         }
 
-        stage('Acceptance tests') {
-            steps {
-                sh  ''' source activate ${BUILD_TAG}
-                        behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
-                    '''
-            }
-            post {
-                always {
-                    cucumber (buildStatus: 'SUCCESS',
-                    fileIncludePattern: '**/*.json',
-                    jsonReportDirectory: './reports/',
-                    parallelTesting: true,
-                    sortingMethod: 'ALPHABETICAL')
-                }
-            }
-        }
+    
 
         stage('Build package') {
             when {
@@ -111,12 +96,7 @@ pipeline {
             }
         }
 
-        // stage("Deploy to PyPI") {
-        //     steps {
-        //         sh """twine upload dist/*
-        //         """
-        //     }
-        // }
+
     }
 
     post {
