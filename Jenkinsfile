@@ -12,21 +12,13 @@ pipeline {
         timestamps()
     }
 
-    environment {
-      PATH="/var/lib/jenkins/miniconda3/bin:$PATH"
-    }
+
 
     stages {
 
         stage ("Code pull"){
             steps{
-                 git {
-            			remote {
-                			github('globalinfotek/PyDemo')
-                			refspec('+refs/pull/*:refs/remotes/origin/pr/*')
-            			}
-            			branch('master')
-        			}
+                git url: 'git@github.com:globalinfotek/PyDemo.git'
             }
         }
 
