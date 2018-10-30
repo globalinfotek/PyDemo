@@ -3,46 +3,50 @@ import pytest
 from unittest.mock import MagicMock
 from ShoppingCart import ShoppingCart
 
-lineCnt = 0
 
 @pytest.fixture()
 def shoppingCart():
     shoppingCart = ShoppingCart()
-    shoppingCart.addItemPrice("a", 1)
-    shoppingCart.addItemPrice("b", 2)
+    shoppingCart.itemPrice("z", 1)
+    shoppingCart.itemPrice("y", 2)
     return shoppingCart
 
-def test_canCalculateTotal(shoppingCart):
-    shoppingCart.addItem("a")
-    assert shoppingCart.calculateTotal() == 1
+def test_getTotal(shoppingCart):
+    shoppingCart.item("z")
+    assert shoppingCart.getTotal() == 1
 
-def test_getCorrectTotalWithMultipleItems(shoppingCart):
-    shoppingCart.addItem("a")
-    shoppingCart.addItem("b")
-    assert shoppingCart.calculateTotal() == 3
+def test_getTotalWithMultipleItems(shoppingCart):
+    shoppingCart.item("z")
+    shoppingCart.item("y")
+    assert shoppingCart.getTotal() == 3
 
-def test_canAddDiscountRule(shoppingCart):
-    shoppingCart.addDiscount("a", 3, 2)
+def test_addDiscountRule(shoppingCart):
+    shoppingCart.discount("z", 3, 2)
 
 def test_canApplyDiscountRule(shoppingCart):
-    shoppingCart.addDiscount("a", 3, 2)
-    shoppingCart.addItem("a")
-    shoppingCart.addItem("a")
-    shoppingCart.addItem("a")
-    assert shoppingCart.calculateTotal() == 2
+    shoppingCart.discount("z", 3, 2)
+    shoppingCart.item("z")
+    shoppingCart.item("z")
+    shoppingCart.item("z")
+    assert shoppingCart.getTotal() == 2
 
-def test_exceptionWithBadItem(shoppingCart):
+def test_canNotApplyDiscountRule(shoppingCart):
+    shoppingCart.discount("z", 3, 2)
+    shoppingCart.item("z")
+    assert shoppingCart.getTotal() != 2
+
+def test_exceptionWhenNotExxistingItemAdded(shoppingCart):
     with pytest.raises(Exception):
-        shoppingCart.addItem("c")
+        shoppingCart.item("x")
 
 def test_verifyReadPricesFile(shoppingCart, monkeypatch):
     mock_file = MagicMock()
-    mock_file.__enter__.return_value.__iter__.return_value = ["c 3"]
+    mock_file.__enter__.return_value.__iter__.return_value = ["x 3"]
     mock_open = MagicMock(return_value = mock_file)
     monkeypatch.setattr("builtins.open", mock_open)
     shoppingCart.readPricesFile("testfile")
-    shoppingCart.addItem("c")
-    result = shoppingCart.calculateTotal()
+    shoppingCart.item("x")
+    result = shoppingCart.getTotal()
     mock_open.assert_called_once_with("testfile")
     assert result == 3
 
