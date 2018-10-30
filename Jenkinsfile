@@ -51,7 +51,7 @@ pipeline {
             steps {
                 sh  ''' source ./env/bin/activate
                 		    pytest  -vs TestShoppingCart.py 
-                        pytest --junitxml=reports/results/test_results.xml TestShoppingCart.py
+                        pytest --junitxml=build/reports/results/test_results.xml TestShoppingCart.py
                     '''
             }
             post {
