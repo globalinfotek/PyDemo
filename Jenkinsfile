@@ -39,6 +39,7 @@ pipeline {
                
                 echo "Test and test coverage"
                 sh  ''' source ./env/bin/activate
+                		    pytest  -vs TestShoppingCart.py 
                         pytest --cov=ShoppingCart  TestShoppingCart.py
                     '''
             }
@@ -95,8 +96,6 @@ pipeline {
                 }
             }
         }
-
-
     }
 
     post {
