@@ -62,7 +62,9 @@ pipeline {
         }
       
       stage('JIRA Interaction ') {
-        def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' "
+           steps {
+            def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' "
+           }
       }
 
     }
