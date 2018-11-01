@@ -61,19 +61,13 @@ pipeline {
             }
         }
       
-      node {
-        stage('JIRA') {
-            def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9'"
-            def issues = searchResults.data.issues
-            for (i = 0; i <issues.size(); i++) {
-                def result = jiraGetIssue idOrKey: issues[i].key
-                def newVersion = jiraNewVersion version: [name: "new-fix-version-1.1",
-                                                            project: "UDD"]
-                def fixVersions = result.data.fields.fixVersions << newVersion.data
-                def testIssue = [fields: [fixVersions: fixVersions]]
-                response = jiraEditIssue idOrKey: issues[i].key, issue: testIssue
+      stage('JIRA Interaction ') {
+           steps {
+                echo " Updating JIRA"
+                def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' " ;
+                def issues = searchResults.data.issues;
+                echo " Updating JIRA"+issues.length;
             }
-        }
       }
 
     }
