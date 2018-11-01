@@ -65,15 +65,15 @@ pipeline {
            steps {
                  script {
                     echo " Updating JIRA Isse with a Comment"
-                    echo "Build Number " ${BUILD_NUMBER} +":" +  ${BRANCH_NAME} 
-                    echo "Connecting with jira"
+                    echo "Build Number "+ ${BUILD_NUMBER} +":" +  ${BRANCH_NAME} 
+                    echo "Connecting with jira" 
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
                         def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-12' " 
                         def issues = searchResults.data.issues
                         for (i = 0; i <issues.size(); i++) {
                             def result = jiraGetIssue idOrKey: issues[i].key
                             def commentValue = "Some Comment FROM " +${BUILD_NUMBER}+":"+${BRANCH_NAME}
-                            response = jiraAddComment idOrKey: 'UDD-12', comment: commentValue
+                            response = jiraAddComment idOrKey: issues[i].key , comment: commentValue
                         }
                     }
                }
