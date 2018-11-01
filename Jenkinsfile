@@ -67,14 +67,14 @@ pipeline {
                     echo " Updating JIRA"
                     echo "Connecting with jira"
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
-                    def commentValue = "Some Comment Text"
-                    def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-12' " 
-                    def issues = searchResults.data.issues
-                    for (i = 0; i <issues.size(); i++) {
-                        def result = jiraGetIssue idOrKey: issues[i].key
-                        response = jiraAddComment idOrKey: issues[i].key, comment: commentValue
+                        def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-12' " 
+                        def issues = searchResults.data.issues
+                        for (i = 0; i <issues.size(); i++) {
+                            def result = jiraGetIssue idOrKey: issues[i].key
+                            def commentValue = "Some Comment Text"
+                            response = jiraAddComment idOrKey: 'UDD-12', comment: commentValue
+                        }
                     }
-                 }
                }
             }
       }
