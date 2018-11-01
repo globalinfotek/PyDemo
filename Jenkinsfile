@@ -72,7 +72,7 @@ pipeline {
                         def issues = searchResults.data.issues
                         for (i = 0; i <issues.size(); i++) {
                             def result = jiraGetIssue idOrKey: issues[i].key
-                            def commentValue = "Some Comment FROM ${BUILD_NUMBER} ':' ${BRANCH_NAME} "
+                            def commentValue = "Some Comment FROM ${BUILD_NUMBER} ':' ${BRANCH_NAME} " 
                             response = jiraAddComment idOrKey: issues[i].key , comment: commentValue
                         }
                     }
