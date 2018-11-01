@@ -67,12 +67,21 @@ pipeline {
                     echo " Updating JIRA"
                     echo "Connecting with jira"
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
-                    def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' " 
+                    // Get the current logged in user
+                    def CurrentUser = ComponentAccessor.getJiraAuthenticationContext().getUser().displayName
+
+                    // Get access to the Jira comment and component manager
+                    CommentManager commentManager = ComponentAccessor.getCommentManager()
+                    ComponentManager componentManager = ComponentManager.getInstance()
+                    def comment = "Some Comment Text";
+
+                    def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-12' " 
                     def issues = searchResults.data.issues
                     for (i = 0; i <issues.size(); i++) {
                         def result = jiraGetIssue idOrKey: issues[i].key
-                        result.data.fields.last_comment = 'New Build Ran'
-                        response = jiraEditIssue idOrKey: issues[i].key
+                        commentManager.create(result, CurrentUser,comment, true)
+                        //result.data.fields.last_comment = 'New Build Ran'
+                       // response = jiraEditIssue idOrKey: issues[i].key, issue: result
                     }
                  }
                }
