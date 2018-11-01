@@ -72,7 +72,7 @@ pipeline {
                     for (i = 0; i <issues.size(); i++) {
                         def result = jiraGetIssue idOrKey: issues[i].key
                         result.data.fields.last_comment = 'New Build Ran'
-                        response = jiraEditIssue idOrKey: issues[i].key, issue: result
+                        response = jiraEditIssue idOrKey: issues[i].key
                     }
                  }
                }
