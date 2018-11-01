@@ -64,9 +64,11 @@ pipeline {
       stage('JIRA Interaction ') {
            steps {
                 echo " Updating JIRA"
+               script{
                 def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' " ;
                 def issues = searchResults.data.issues;
                 echo " Updating JIRA"+issues.length;
+               }
             }
       }
 
