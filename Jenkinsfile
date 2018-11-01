@@ -64,6 +64,10 @@ pipeline {
       stage('JIRA Interaction ') {
            steps {
                  script {
+                     import com.atlassian.jira.issue.Issue;
+                     import com.atlassian.jira.ComponentManager
+                     import com.atlassian.jira.component.ComponentAccessor;
+                     import com.atlassian.jira.issue.comments.CommentManager
                     echo " Updating JIRA"
                     echo "Connecting with jira"
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
