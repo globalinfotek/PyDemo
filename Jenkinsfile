@@ -63,7 +63,7 @@ pipeline {
       
       stage('JIRA Interaction ') {
            steps {
-                 script {r
+                 script {
                     echo " Updating JIRA"
                     echo "Connecting with jira"
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
@@ -72,7 +72,7 @@ pipeline {
                         for (i = 0; i <issues.size(); i++) {
                             def result = jiraGetIssue idOrKey: issues[i].key
                             def commentValue = "Some Comment Text"
-                            response = jiraAddComment idOrKey: 'UDD-12', comment: commentValue
+                            response = jiraAddComment idOrKey: 'UDD-12', comment: 'test comment'
                         }
                     }
                }
