@@ -68,7 +68,7 @@ pipeline {
                     echo "Build Number  ${BUILD_NUMBER}  ':'  ${BRANCH_NAME} "
                     echo "Connecting with jira" 
                     def workingIssueName = env.BRANCH_NAME.split("_");
-                    workingIssueName = (workingIssueName.length >0)?workingIssueName[0]:env.BRANCH_NAME
+                    workingIssueName = (workingIssueName.length >0)?workingIssueName[0]:'UDD-12'
                     echo "Connecting with jira" +workingIssueName
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
                         def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = '"+workingIssueName+"'"
