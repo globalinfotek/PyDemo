@@ -69,7 +69,7 @@ pipeline {
                     echo "Connecting with jira" 
                     def workingIssueName = ${BUILD_NUMBER}.split("_");
                     if(workingIssueName.length > 0){
-                        workingIssueName = workingIssueName.length >0:workingIssueName[0]:${BUILD_NUMBER}
+                        workingIssueName = (workingIssueName.length >0)?workingIssueName[0]:${BUILD_NUMBER}
                     }
                     echo "Connecting with jira" +workingIssueName
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
