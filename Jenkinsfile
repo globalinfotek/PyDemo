@@ -63,29 +63,18 @@ pipeline {
       
       stage('JIRA Interaction ') {
            steps {
-                 script {
-                     import com.atlassian.jira.issue.Issue;
-                     import com.atlassian.jira.ComponentManager
-                     import com.atlassian.jira.component.ComponentAccessor;
-                     import com.atlassian.jira.issue.comments.CommentManager
+                 script {r
                     echo " Updating JIRA"
                     echo "Connecting with jira"
                     withEnv(['JIRA_SITE=GITI_JIRA']) {
-                    // Get the current logged in user
-                    def CurrentUser = ComponentAccessor.getJiraAuthenticationContext().getUser().displayName
-
-                    // Get access to the Jira comment and component manager
-                    CommentManager commentManager = ComponentAccessor.getCommentManager()
-                    ComponentManager componentManager = ComponentManager.getInstance()
-                    def comment = "Some Comment Text";
+                    
+                    def commentValue = "Some Comment Text";
 
                     def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-12' " 
                     def issues = searchResults.data.issues
                     for (i = 0; i <issues.size(); i++) {
                         def result = jiraGetIssue idOrKey: issues[i].key
-                        commentManager.create(result, CurrentUser,comment, true)
-                        //result.data.fields.last_comment = 'New Build Ran'
-                       // response = jiraEditIssue idOrKey: issues[i].key, issue: result
+                        response = jiraAddComment idOrKey: issues[i].key, comment: commentValue
                     }
                  }
                }
