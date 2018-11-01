@@ -66,7 +66,7 @@ pipeline {
                  script {
                     echo " Updating JIRA"
                     echo "Connecting with jira"
-                    withEnv(['JIRA_SITE=https://globalinfotek.atlassian.net']) {
+                    withEnv(['JIRA_SITE=GITI_JIRA']) {
                     def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = 'UDD-9' " 
                     def issues = searchResults.data.issues
                     for (i = 0; i <issues.size(); i++) {
