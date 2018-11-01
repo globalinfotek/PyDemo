@@ -73,7 +73,7 @@ pipeline {
                         for (i = 0; i <issues.size(); i++) {
                             def result = jiraGetIssue idOrKey: issues[i].key
                             def commentValue = "Some Comment FROM " +${BUILD_NUMBER}+":"+${BRANCH_NAME}
-                            response = jiraAddComment idOrKey: 'UDD-12', comment: 'test comment'
+                            response = jiraAddComment idOrKey: 'UDD-12', comment: commentValue
                         }
                     }
                }
