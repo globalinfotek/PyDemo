@@ -18,7 +18,7 @@ pipeline {
 
         stage ("Code pull"){
             steps{
-                git url: 'git@github.com:globalinfotek/PyDemo.git'
+                git url: 'git@github.com:globalinfotek/demo-python-app.git'
             }
         }
 
