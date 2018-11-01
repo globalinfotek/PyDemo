@@ -76,7 +76,7 @@ pipeline {
                         def issues = searchResults.data.issues
                         for (i = 0; i <issues.size(); i++) {
                             def result = jiraGetIssue idOrKey: issues[i].key
-                            def commentValue = "Some Comment FROM ${BUILD_NUMBER} TO BRANCH " +workingIssueName
+                            def commentValue = "Some Comment FROM Build ${BUILD_NUMBER} TO BRANCH " +workingIssueName
                             response = jiraAddComment idOrKey: issues[i].key , comment: commentValue
                         }
                     }
