@@ -1,0 +1,92 @@
+APP_NAME = "demo-python-app"
+GIT_BRANCH = 'ci-pipeline'
+GIT_REPO_URL = "git@${env.GIT_HOST}:usaf-cyber/${APP_NAME}.git"
+MAJOR_VERSION = 1
+MINOR_VERSION = 0
+
+node {
+    currentBuild.displayName = GIT_BRANCH
+
+	stage('initialize') {
+		SERVICE_VERSION = "${MAJOR_VERSION}.${MINOR_VERSION}.${env.BUILD_NUMBER}"
+		currentBuild.displayName = GIT_BRANCH + "-" + SERVICE_VERSION
+		cleanDisplayName = currentBuild.displayName.replace(' ', '_').replace('.', '_').toLowerCase()
+
+		sh 'rm -rf *'
+		sh "git clone ${GIT_REPO_URL}"
+	}
+    
+    dir (APP_NAME) {
+
+       stage('build') {
+			sh "git checkout ${GIT_BRANCH}"
+			sh 'git pull origin master'
+            sh  ''' python3 -m venv env
+                        source ./env/bin/activate
+                        pip install flask
+                        pip install pytest-xdist
+                        pip install pytest-cov
+                        pip install nose
+                        pip install coverage
+                        pip install requests
+                    '''
+		}
+
+		stage('test') {
+            try {
+                sh  '''
+                    source ./env/bin/activate
+                    pytest --junitxml=build/reports/tests/test_results.xml test
+                    coverage run --source=source -m pytest test
+                    coverage report
+                '''
+            } finally {
+              archive "build/reports/tests/**"
+              junit 'build/reports/**/*.xml'
+            }
+        }
+
+
+        stage('quality checks') {
+            echo 'Need to add Sonar!'
+        }
+
+
+      stage('JIRA Interaction ') {
+        script {
+            echo " Updating JIRA Isse with a Comment"
+            echo "Build Number  ${BUILD_NUMBER}   "
+            echo "Connecting with jira" 
+            def workingIssueName = 'UDD-12';
+            // This environment name should be JIRA Sitename that is configured in Jenkins JIRA Steps
+            // This plugin uses that Site Authenrication to update the JIAR issue
+            withEnv(['JIRA_SITE=GITI JIRA Site']) {
+                // Query JIRA for the given issue
+                def searchResults = jiraJqlSearch jql: "project = UDD AND issuekey = '"+workingIssueName+"'"
+                def issues = searchResults.data.issues
+                for (i = 0; i <issues.size(); i++) {
+                    def result = jiraGetIssue idOrKey: issues[i].key
+                    def commentValue = "Some Comment FROM Build ${SERVICE_VERSION} TO ISSUE " +workingIssueName
+                    response = jiraAddComment idOrKey: issues[i].key , comment: commentValue
+                }
+            }
+        }
+        docker.withRegistry("http://${env.DOCKER_REGISTRY}", 'docker-registry-login') {
+            sh "docker build -t ${env.DOCKER_REGISTRY}/${APP_NAME}:${SERVICE_VERSION} --build-arg VERSION=${SERVICE_VERSION} -f docker/Dockerfile ."
+         }
+      }
+    
+      stage('integration') {
+			sh "git push origin ${GIT_BRANCH}"
+			sh "git checkout master"
+			sh "git merge ${GIT_BRANCH} --no-edit"
+			sh "git push origin master"
+			sh "git tag -a -f -m 'Jenkins Tag' ${SERVICE_VERSION}"
+			sh "git push --tags"
+			docker.withRegistry("http://${env.DOCKER_REGISTRY}", 'docker-registry-login') {
+				sh "docker push ${env.DOCKER_REGISTRY}/${APP_NAME}:${SERVICE_VERSION}"
+			}
+		}
+	  
+    }
+}

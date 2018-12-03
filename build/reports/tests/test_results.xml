@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="5" time="0.204"><testcase classname="test.test_application_details.TestApplicationDetails" file="test/test_application_details.py" line="17" name="test_host_name" time="0.0013780593872070312"></testcase><testcase classname="test.test_application_details.TestApplicationDetails" file="test/test_application_details.py" line="9" name="test_name" time="0.0009109973907470703"></testcase><testcase classname="test.test_application_details.TestApplicationDetails" file="test/test_application_details.py" line="25" name="test_version" time="0.0009174346923828125"></testcase><testcase classname="test.test_json_converter.TestJsonConverter" file="test/test_json_converter.py" line="7" name="test_convert" time="0.0009999275207519531"></testcase><testcase classname="test.test_update_service.TestUpdateService" file="test/test_update_service.py" line="11" name="test_post_update" time="0.002190828323364258"><system-out>&apos;Wed Nov 14 16:31:17 2018&apos;
+(&apos;Publishing :{&quot;name&quot;: &quot;demo-python-source&quot;, &quot;hostName&quot;: &quot;LMHQUCIS245868&quot;, &apos;
+ &apos;&quot;version&quot;: &apos;
+ &apos;&quot;?&quot;}:To:http://demo-update-api-devops.b9ad.pro-us-east-1.openshiftapps.com/updates&apos;)
+&apos;OK&apos;
+</system-out></testcase></testsuite>
